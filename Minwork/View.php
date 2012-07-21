@@ -1,16 +1,57 @@
 <?php
+/**
+ * Minwork\View
+ *
+ * This class will attempt to load a template file from the 
+ * App\Views folder and then you have the option to return
+ * or output the information directly.
+ */
 namespace Minwork;
 
 class View {
 
+    /**
+     * View::$template
+     *
+     * This is the template path that we are trying to access
+     * note: you shouldn't add a path name to this string
+     */
     public $template    = null;
-    public $ext         = 'php';
-    public $_data       = array();
 
+    /**
+     * View::$ext
+     *
+     * This is the extention we'll be using for the template file
+     */
+    public $ext         = 'php';
+
+    /**
+     * View::$_data
+     *
+     * This is the data that we used to store class set variables
+     */
+    private $_data       = array();
+
+    /**
+     * View::__set()
+     *
+     * When they set a variable add that variable to the _data array
+     * @param string $item
+     * @param mixed $value
+     * @return void
+     */
     public function __set($item, $value) {
         $this->_data[$item]     = $value;
     }
 
+    /**
+     * View::__get()
+     *
+     * When they attempt to call a class variable we will attempt to
+     * grab from the _data array and return null if it doesn't exists
+     * @param string $item
+     * @return mixed
+     */
     public function __get($item) {
         
         if(isset($this->_data[$item])) {
@@ -20,7 +61,14 @@ class View {
         return null;
     }
 
-
+    /**
+     * View::__construct()
+     *
+     * When they call the class construct you essentially want to
+     * setup the template path so it can be rendered later
+     * @param string $template
+     * @return void
+     */
     public function __construct($template = null) {
         
         if(is_null($template)) {
@@ -31,6 +79,15 @@ class View {
         $this->template = $template;
     }    
 
+
+    /**
+     * View::render()
+     *
+     * We want to now output or return the template data to the user
+     * this will also pass class variables straight to the template
+     * @param boolean $output
+     * @return string
+     */
     public function render($output = false) {
         
         //Turn on output buffering

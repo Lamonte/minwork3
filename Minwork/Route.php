@@ -1,22 +1,37 @@
 <?php
-namespace Minwork;
-
 /**
- * Route class
+ * Minwork\Route
  *
  * Allowing me to route the way the framework handles urls and
  * also allows you to manipulate the way the app handles the route
  * data.
  */
+namespace Minwork;
+
 class Route {
 
-    //array of custom routes
+    /**
+     * Route::static::$route
+     *
+     * Static array of custom routes set using 
+     * Route::set()
+     */
     public static $routes       = array();
 
-    //array of controller folder paths
+    /**
+     * Route::static::$folders
+     *
+     * Static array of controller folder paths
+     * set using Route::register_controller_path()
+     */
     public static $folders      = array();
 
-    //array of the current route
+    /**
+     * Route::static::$routes_array
+     *
+     * Static array of the current routes.
+     * eg.: controllers, actions, params, sub folder
+     */
     public static $routes_array = array(
         'folder'        => null,
         'controller'    => null,
@@ -24,9 +39,13 @@ class Route {
         'params'        => array(),
     );
 
+    /**
+     * Route::static::$default
+     *
+     * Default controller/action path (even params if necessary)
+     * eg.: controller/action/param/param <- that format
+     */
     public static $default      = null;
-    
-    public function __construct() {}
 
     /**
      * Route::split_path()
@@ -76,6 +95,15 @@ class Route {
         return empty($path) ? array() : $path;
     }
 
+    /**
+     * Route::trim_slashes
+     *
+     * NOTE: Probably will move this function to a string library
+     * This function takes a string and strips forward slashes
+     * from the beginning and end of the string.
+     * @param string $string
+     * @return string
+     */
     public function trim_slashes($string) {
 
         //remove forward slashes from the beginning and ending of the current path
@@ -99,10 +127,26 @@ class Route {
         self::$routes[] = array($find, $replace, $regex);
     }
 
+    /**
+     * Route::static::set_default()
+     *
+     * Sets the default controller/action
+     * ex.: Route::set_default("welcome/home/param/param");
+     * @param string $path
+     * @return void
+     */
     public static function set_default($path) {
         self::$default  = $path;
     }
 
+    /**
+     * Route::register_default()
+     *
+     * Basically sets up the default path then
+     * tells the route which controller/action the route
+     * class should be calling.
+     * @return void
+     */
     public function register_default() {
 
         if(!is_null(self::$default)) {
@@ -128,6 +172,13 @@ class Route {
         self::$folders[] = $path;
     }
 
+    /**
+     * Route::init()
+     *
+     * This function puts everything together and makes the world
+     * go round.
+     * @return void
+     */
     public function init() {
 
         //get the current path
@@ -141,14 +192,21 @@ class Route {
 
         //lets try loading the current controller if exists
         $this->load_controller();
-
     }
 
+    /**
+     * Route::set_path()
+     *
+     * This function basically takes a path and split it into an array
+     * and it also checks if the current route matches any folders set.
+     * By folders I mean sub folders in the controller folder.  Allowing
+     * us to access controllers in sub folders properly.
+     * @param string $current_path
+     * @return array
+     */
     public function set_path($current_path) {
 
         $current_folder = null;
-
-        //var_dump(array_shift($current_path));
 
         //lets make sure the curreht path isn't empty
         if(count($current_path) > 0) {
@@ -207,6 +265,14 @@ class Route {
         }
     }
 
+    /**
+     * Route::reroute() 
+     *
+     * This will attempt to set a new route based on the 
+     * routes array.  This allows us to override controllers
+     * actions to new controller/actions.  So even if a controller
+     * doesn't exists we could route it to a different CONTROLLER.
+     */
     public function reroute() {
 
         $current_path       = $this->split_path();
@@ -216,14 +282,17 @@ class Route {
         foreach(self::$routes as $route) {
 
             //check if we're using regular expressions or not
-            $regex = isset($route[2]) && $route[2] == true ? $route[0] : null;
+            $regex = isset($route[2]) && $route[2] == true ? $route[0] : preg_quote($route[0], '/');
 
             //check if there was any matches of the current route
             if(preg_match('/' . $regex . '/i', $current_path_str, $matches)) {
 
                 //there was only one match which had no params, so lets remove all the $ signs
                 if(count($matches) == 1) {
+
+                    //NOTE: debating if I should keep the $1 variables in the string or not, will ask around.
                     $route[1]   = preg_replace('/\$\d+/', '', $route[1]);
+
                 } else {
 
                     foreach($matches as $id => $match) {
@@ -231,6 +300,7 @@ class Route {
 
                         $route[1] = str_replace('$' . $id, $match, $route[1]);
                     }
+
                 }
 
                 //set the new path (overwriting any controllers to this new controller)
@@ -240,6 +310,16 @@ class Route {
         }
     }
 
+    /**
+     * Route::load_controller()
+     *
+     * Lets attempt to load the current controller for the
+     * current page loaded.  If the controller exists, but
+     * the controller action doesn't exists lets attempt to load
+     * the default action.  If that doesn't exists lets throw a 404
+     * page not found error.
+     * @return void
+     */
     public function load_controller() {
 
         //lets try loading the classes
@@ -272,10 +352,11 @@ class Route {
         } else {
 
            //404
-            //echo '404: page doesnt exists';
             $error404 = new View('404');
             $error404->render(true);
 
         }
     }
+    
+    public function __construct() {}
 }

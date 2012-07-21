@@ -1,12 +1,13 @@
 <?php
-namespace Minwork;
-
 /**
- * Config Items
+ * Minwork\Config
  * 
  * Get config items from the config without having to
- * use globals in our other class methods
+ * use globals in our other class methods. May have
+ * more functionality soon.
  */
+namespace Minwork;
+
 class Config {
 
     /**
@@ -26,4 +27,5 @@ class Config {
 
         return null;
     }
+    
 }

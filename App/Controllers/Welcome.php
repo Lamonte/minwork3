@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Example Controller
+ */
 namespace App\Controllers;
 
 class Welcome extends \Minwork\Controller {
@@ -8,7 +10,7 @@ class Welcome extends \Minwork\Controller {
         parent::__construct();
     }
 
-    public function action_home() {
-        echo 'welcome home';
+    public function action_index() {
+        echo 'testing';
     }
 }

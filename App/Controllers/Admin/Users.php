@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers\Admin;
-use Minwork\View;
+use Minwork\View; // <- can use the View class directly or just use new \Minwork\View()
 
 class Users extends \Minwork\Controller {
 

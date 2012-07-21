@@ -10,7 +10,7 @@
 
 <body>
 
-     <img src="http://2.bp.blogspot.com/-e8GMCdKgBP0/TZtUSMT8ZLI/AAAAAAAABHk/9DBV4p1LSaE/s1600/404+fattie.jpg" style="width: 100%; height: 100%;" />
+     <img src="http://2.bp.blogspot.com/-e8GMCdKgBP0/TZtUSMT8ZLI/AAAAAAAABHk/9DBV4p1LSaE/s1600/404+fattie.jpg" style="width: 50%; height: 50%;" />
 
 </body>
 </html>
