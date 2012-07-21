@@ -272,7 +272,9 @@ class Route {
         } else {
 
            //404
-            echo '404: page doesnt exists';
+            //echo '404: page doesnt exists';
+            $error404 = new View('404');
+            $error404->render(true);
 
         }
     }
