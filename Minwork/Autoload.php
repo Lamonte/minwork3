@@ -6,7 +6,7 @@
  * @return void
  */
 function __autoload($class) {
-    //echo $class . '<br>' . "\n";
+    
     //format class path correctly
     $class  = @explode('\\', $class);
 
