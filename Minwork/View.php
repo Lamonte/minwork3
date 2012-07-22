@@ -30,8 +30,23 @@ class View {
      *
      * This is the data that we used to store class set variables
      */
-    private $_data       = array();
+    private $_data      = array();
 
+    /**
+     * View::$_helpers
+     *
+     * This stores assigned helper classes to be loaded into the helper 
+     * object.
+     */
+    public static $_helpers   = array();
+
+    /**
+     * View::$helper
+     *
+     * This will be an empty object that stores helper classes
+     */
+    public $helper      = null;
+    
     /**
      * View::__set()
      *
@@ -77,8 +92,40 @@ class View {
 
         //set template file
         $this->template = $template;
+
+        $this->helper   = new \stdClass();
     }    
 
+    /**
+     * View::set_helper()
+     *
+     * This function is used to assign helper classes
+     * from the controller.
+     * @param string $helper
+     * @return void
+     */
+    public static function set_helper($helper) {
+        if(!in_array($helper, self::$_helpers)) {
+            self::$_helpers[] = $helper;
+        }
+    }
+
+    /**
+     * View::load_helpers()
+     *
+     * This function attempts to load helper classes
+     * and then assignt hem to the helper empty object.
+     * @return void
+     */
+    public function load_helpers() {
+        foreach(self::$_helpers as $helper) {
+            $class = 'App\\Helpers\\' . ucfirst(strtolower($helper));
+            if(class_exists($class)) {
+                $helper = strtolower($helper);
+                $this->helper->{$helper} = new $class();
+            }
+        }
+    }
 
     /**
      * View::render()
@@ -89,7 +136,13 @@ class View {
      * @return string
      */
     public function render($output = false) {
-        
+
+        //try to load the helper classes
+        $this->load_helpers();
+
+        //setup the helpers variable (overriding any other helper variables)
+        $this->_data['helpers'] = $this->helper;
+
         //Turn on output buffering
         ob_start();
         

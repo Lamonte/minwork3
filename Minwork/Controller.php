@@ -18,5 +18,19 @@ class Controller {
      * No real functionality yet
      */
     public function __construct() {}
+
+    /**
+     * Controller::load_helper()
+     *
+     * This function allows us to access helper classes
+     * within the view class files when loaded. To access
+     * the helper class you would do: $helper->classname->function()
+     * inside the view file.
+     * @param string $helper
+     * @return void
+     */
+    public function load_helper($helper) {
+        View::set_helper($helper);
+    }
     
 }
