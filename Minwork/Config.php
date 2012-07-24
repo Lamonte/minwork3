@@ -17,7 +17,7 @@ class Config {
      * @param string $item_name
      * @return string
      */
-    public static function Item($item_name) {
+    public static function item($item_name) {
         global $config, $conf;
 
         //lets check if the config item was set

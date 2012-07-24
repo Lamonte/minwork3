@@ -22,7 +22,7 @@ class Route {
      * Route::static::$folders
      *
      * Static array of controller folder paths
-     * set using Route::register_controller_path()
+     * set using Route::registerControllerPath()
      */
     public static $folders      = array();
 
@@ -48,14 +48,14 @@ class Route {
     public static $default      = null;
 
     /**
-     * Route::split_path()
+     * Route::splitPath()
      *
      * This function takes the current url path and then properly
      * format it into an array for later use.  Allowing us to
      * access the correct controllers and controller actions.
      * @return array
      */
-    public function split_path($string = null) { 
+    public function splitPath($string = null) { 
 
         //get the current path
         $request_uri    = is_null($string) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : $string;
@@ -67,13 +67,13 @@ class Route {
         $request_uri    = preg_replace("/\?.*/i", '', $request_uri);
 
         //get the config url
-        $config_url     = preg_replace("/^.*\:\/\//i", '', Config::Item('url'));
+        $config_url     = preg_replace("/^.*\:\/\//i", '', Config::item('url'));
 
         //remove config url from current path
         $request_uri    = str_replace($config_url, '', $request_uri);
 
         //trim beginning and ending forward slashes
-        $request_uri    = $this->trim_slashes($request_uri);
+        $request_uri    = $this->trimSlashes($request_uri);
 
         //lets explode the current path into an array
         $path           = @explode("/", $request_uri);
@@ -96,7 +96,7 @@ class Route {
     }
 
     /**
-     * Route::trim_slashes
+     * Route::trimSlashes
      *
      * NOTE: Probably will move this function to a string library
      * This function takes a string and strips forward slashes
@@ -104,7 +104,7 @@ class Route {
      * @param string $string
      * @return string
      */
-    public function trim_slashes($string) {
+    public function trimSlashes($string) {
 
         //remove forward slashes from the beginning and ending of the current path
         $string     = preg_replace("/^\/|\/$/i", '', $string);
@@ -128,38 +128,38 @@ class Route {
     }
 
     /**
-     * Route::static::set_default()
+     * Route::static::setDefault()
      *
      * Sets the default controller/action
-     * ex.: Route::set_default("welcome/home/param/param");
+     * ex.: Route::setDefault("welcome/home/param/param");
      * @param string $path
      * @return void
      */
-    public static function set_default($path) {
+    public static function setDefault($path) {
         self::$default  = $path;
     }
 
     /**
-     * Route::register_default()
+     * Route::registerDefault()
      *
      * Basically sets up the default path then
      * tells the route which controller/action the route
      * class should be calling.
      * @return void
      */
-    public function register_default() {
+    public function registerDefault() {
 
         if(!is_null(self::$default)) {
             
-            $default_path   = $this->split_path(self::$default);
+            $default_path   = $this->splitPath(self::$default);
 
             //set default path
-            $this->set_path($default_path);
+            $this->setPath($default_path);
         }
     }
 
     /**
-     * Route::register_controller_path()
+     * Route::registerControllerPath()
      *
      * This function would allow you to ask the framework to look
      * for this folder instead of the root controller folder when
@@ -168,7 +168,7 @@ class Route {
      * controller classes from.
      * @return void
      */
-    public static function register_controller_path($path) {
+    public static function registerControllerPath($path) {
         self::$folders[] = $path;
     }
 
@@ -182,20 +182,20 @@ class Route {
     public function init() {
 
         //get the current path
-        $current_path   = $this->split_path();
+        $current_path   = $this->splitPath();
 
         //setup the controller properly
-        $this->set_path($current_path);
+        $this->setPath($current_path);
 
         //start rewrouting
-        $this->reroute();
+        $this->reRoute();
 
         //lets try loading the current controller if exists
-        $this->load_controller();
+        $this->loadController();
     }
 
     /**
-     * Route::set_path()
+     * Route::setPath()
      *
      * This function basically takes a path and split it into an array
      * and it also checks if the current route matches any folders set.
@@ -204,7 +204,7 @@ class Route {
      * @param string $current_path
      * @return array
      */
-    public function set_path($current_path) {
+    public function setPath($current_path) {
 
         $current_folder = null;
 
@@ -215,7 +215,7 @@ class Route {
             $folders = array();
 
             foreach(self::$folders as $folder) {
-                $folders[] = $this->trim_slashes($folder);
+                $folders[] = $this->trimSlashes($folder);
             }
 
             //loop through the folders array to check if the current path starts with this
@@ -261,21 +261,21 @@ class Route {
         } else {
 
             //lets attempt to set the default controller
-            $this->register_default();
+            $this->registerDefault();
         }
     }
 
     /**
-     * Route::reroute() 
+     * Route::reRoute() 
      *
      * This will attempt to set a new route based on the 
      * routes array.  This allows us to override controllers
      * actions to new controller/actions.  So even if a controller
      * doesn't exists we could route it to a different CONTROLLER.
      */
-    public function reroute() {
+    public function reRoute() {
 
-        $current_path       = $this->split_path();
+        $current_path       = $this->splitPath();
         $current_path_str   = implode('/', $current_path);
 
         //loop through the user set routes
@@ -304,14 +304,14 @@ class Route {
                 }
 
                 //set the new path (overwriting any controllers to this new controller)
-                $new_path = $this->split_path($route[1]);
-                $this->set_path($new_path);
+                $new_path = $this->splitPath($route[1]);
+                $this->setPath($new_path);
             }
         }
     }
 
     /**
-     * Route::load_controller()
+     * Route::loadController()
      *
      * Lets attempt to load the current controller for the
      * current page loaded.  If the controller exists, but
@@ -320,7 +320,7 @@ class Route {
      * page not found error.
      * @return void
      */
-    public function load_controller() {
+    public function loadController() {
 
         //lets try loading the classes
         $routes         = self::$routes_array;

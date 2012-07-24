@@ -20,7 +20,7 @@ class Controller {
     public function __construct() {}
 
     /**
-     * Controller::load_helper()
+     * Controller::loadHelper()
      *
      * This function allows us to access helper classes
      * within the view class files when loaded. To access
@@ -29,7 +29,7 @@ class Controller {
      * @param string $helper
      * @return void
      */
-    public function load_helper($helper) {
+    public function loadHelper($helper) {
         View::set_helper($helper);
     }
     

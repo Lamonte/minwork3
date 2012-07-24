@@ -7,7 +7,7 @@ use Minwork\Route;
 Route::set("example", "welcome/index"); //example route
 
 //tell the script to look for the admin folder
-Route::register_controller_path("admin");
+Route::registerControllerPath("admin");
 
 //set the default controller path
-Route::set_default("welcome/index");
+Route::setDefault("welcome/index");

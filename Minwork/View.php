@@ -97,27 +97,27 @@ class View {
     }    
 
     /**
-     * View::set_helper()
+     * View::setHelper()
      *
      * This function is used to assign helper classes
      * from the controller.
      * @param string $helper
      * @return void
      */
-    public static function set_helper($helper) {
+    public static function setHelper($helper) {
         if(!in_array($helper, self::$_helpers)) {
             self::$_helpers[] = $helper;
         }
     }
 
     /**
-     * View::load_helpers()
+     * View::loadHelpers()
      *
      * This function attempts to load helper classes
      * and then assignt hem to the helper empty object.
      * @return void
      */
-    public function load_helpers() {
+    public function loadHelpers() {
         foreach(self::$_helpers as $helper) {
             $class = 'App\\Helpers\\' . ucfirst(strtolower($helper));
             if(class_exists($class)) {
@@ -138,7 +138,7 @@ class View {
     public function render($output = false) {
 
         //try to load the helper classes
-        $this->load_helpers();
+        $this->loadHelpers();
 
         //setup the helpers variable (overriding any other helper variables)
         $this->_data['helpers'] = $this->helper;
