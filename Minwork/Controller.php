@@ -30,7 +30,7 @@ class Controller {
      * @return void
      */
     public function loadHelper($helper) {
-        View::set_helper($helper);
+        View::setHelper($helper);
     }
     
 }
